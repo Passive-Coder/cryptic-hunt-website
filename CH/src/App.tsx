@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useWindowSize from "./useWindowSize";
 import Pintoo from "../assets/images/pintoo.svg";
-import AtlanticOwl from "../assets/images/Atlantic Owl-2 1.png";
+import AtlanticOwl from "../assets/images/Atlantic owl-2 1.png";
 import EqyptianOwl from "../assets/images/Egyptian pintoo-2 2.png";
 import PokemonOwl from "../assets/images/Pokemon owl-2 2.png";
 import SpiderOwl from "../assets/images/spidermanpintoonew 1.png"
