@@ -1,0 +1,96 @@
+/* layout basics */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root, .app { height: 100%; width: 100%; overflow: hidden; }
+.app { position: relative; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+@font-face {
+  font-family: "Area-Extended";
+  src: url("./assets/fonts/AreaInktrap-Extended.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./assets/fonts/Qurova-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1{
+  font-family: "Geist";
+  width: 100%;
+}
+
+p {
+  font-family: "Area-Extended", sans-serif; /* fallback font added */
+  overflow-wrap: break-word; /* ensures wrapping */
+  width: 50%;
+}
+
+/* animated gradient background */
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, #EF4136 0%, #F5753B 50%, #FAA83F 100%);
+  background-size: 300% 300%;
+  animation: shift 12s ease-in-out infinite;
+}
+@keyframes shift {
+  0% { background-position: 0% 50%;}
+  50% { background-position: 100% 50%;}
+  100% { background-position: 0% 50%;}
+}
+
+/* full-screen SVG overlay sitting above the background */
+.overlay-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4; /* below arrow/title */
+  pointer-events: none; /* the mask rect itself shouldn't capture pointer events */
+}
+
+/* arrow: centered initially; framer animates x/y & rotate */
+.arrow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* center baseline */
+  z-index: 8;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6));
+  pointer-events: auto; /* allow clicking */
+  font-size: 4rem;
+}
+
+/* SVG arrow styling */
+.arrow-svg { display: block; }
+
+/* big instruction/title */
+.title {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  color: rgba(255,255,255,0.95);
+  font-size: 1.6rem;
+  letter-spacing: 0.6px;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+}
+
+/* small responsive tweak */
+@media (max-width: 520px) {
+  .arrow-svg { width: 44px; height: 44px; }
+  .title { font-size: 1.1rem; bottom: 3vh; }
+}
