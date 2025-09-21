@@ -5,7 +5,7 @@ html, body, #root, .app { height: 100%; width: 100%; overflow: hidden; }
 
 @font-face {
   font-family: "Area-Extended";
-  src: url("./assets/fonts/AreaInktrap-Extended.ttf") format("truetype");
+  src: url("../assets/fonts/AreaInktrap-Extended.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -19,7 +19,7 @@ html, body, #root, .app { height: 100%; width: 100%; overflow: hidden; }
 
 @font-face {
   font-family: "Geist";
-  src: url("./assets/fonts/Qurova-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/Qurova-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
