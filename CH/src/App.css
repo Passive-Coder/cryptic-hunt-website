@@ -10,6 +10,13 @@ html, body, #root, .app { height: 100%; width: 100%; overflow: hidden; }
   font-style: normal;
 }
 
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
 @font-face {
   font-family: "Geist";
   src: url("./assets/fonts/Qurova-Regular.ttf") format("truetype");

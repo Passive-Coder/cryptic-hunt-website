@@ -1,73 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import useWindowSize from "./useWindowSize";
+import Pintoo from "../assets/images/Pintoo.svg";
+import AtlanticOwl from "../assets/images/Atlantic Owl-2 1.png";
+import EqyptianOwl from "../assets/images/Egyptian pintoo-2 2.png";
+import PokemonOwl from "../assets/images/Pokemon owl-2 2.png";
+import Map from "../assets/images/Map Asset.png";
 import "./App.css";
 
 const ORDER = ["tl", "tr", "br", "bl"];
 
 export default function App() {
-  const { width, height } = useWindowSize();
-  const [step, setStep] = useState(0);
-  const [radii, setRadii] = useState({ tl: 0, tr: 0, br: 0, bl: 0 });
+    const images = [AtlanticOwl, EqyptianOwl, PokemonOwl];
 
-  const PARTIAL = width * 0.25;
-  const FULL = Math.max(width, height);
-  const current = ORDER[step];
+  // State to track which image is active
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 🔹 Mouse tracking state
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [pupils, setPupils] = useState({
-    left: { cx: 70, cy: 80 },
-    right: { cx: 130, cy: 80 },
-  });
-
+  // Cycle through images every 4 seconds
   useEffect(() => {
-    const handleMouseMove = (e) => setMouse({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
-  const leftEye = { x: 70, y: 80 };
-  const rightEye = { x: 130, y: 80 };
-  const maxOffset = 6;
+  const { width, height } = useWindowSize();
+  const pintooSize = (width >=900)?(Math.min(width, height) * 0.55):(Math.min(width, height)*0.8);
+  const [step, setStep] = useState(0);
+  const [radii, setRadii] = useState({ tl: 0, tr: 0, br: 0, bl: 0 });
+  const [reveal, setReveal] = useState(false);
 
-  const mapToSvg = (pos, svgSize, viewBoxSize) =>
-    (pos / svgSize) * viewBoxSize;
-
-  const lerp = (a, b, t) => a + (b - a) * t;
-
-  useEffect(() => {
-    const mappedX = mapToSvg(mouse.x, width, 200);
-    const mappedY = mapToSvg(mouse.y, height, 200);
-
-    const dxHead = mappedX - 100;
-    const dyHead = mappedY - 100;
-    if (dxHead * dxHead + dyHead * dyHead <= 90 * 90) {
-      setPupils({
-        left: { cx: 70, cy: 80 },
-        right: { cx: 130, cy: 80 },
-      });
-      return;
-    }
-
-    const updateEye = (eye, prev) => {
-      const dx = mappedX - eye.x;
-      const dy = mappedY - eye.y;
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const factor = Math.min(1, maxOffset / dist);
-      const targetX = eye.x + dx * factor;
-      const targetY = eye.y + dy * factor;
-      return {
-        cx: lerp(prev.cx, targetX, 0.1),
-        cy: lerp(prev.cy, targetY, 0.1),
-      };
-    };
-
-    setPupils((prev) => ({
-      left: updateEye(leftEye, prev.left),
-      right: updateEye(rightEye, prev.right),
-    }));
-  }, [mouse, width, height]);
+  const paraFontSize = width > height ? height * 0.025 : width * 0.025;
+  const PARTIAL = height > width ? width * 0.32 : height * 0.5;
+  const FULL = Math.max(width, height);
+  const current = ORDER[step];
 
   const handleClick = (corner) => {
     if (radii[corner] > 0) return;
@@ -85,45 +51,235 @@ export default function App() {
 
   const allDone = step === ORDER.length;
 
-  const ARROW_TARGETS = {
-    tl: { x: -width / 2 + 120, y: -height / 2 + 90, rotate: -135 },
-    tr: { x: width / 2 - 180, y: -height / 2 + 90, rotate: -45 },
-    br: { x: width / 2 - 180, y: height / 2 - 180, rotate: 45 },
-    bl: { x: -width / 2 + 120, y: height / 2 - 180, rotate: 135 },
-  };
+  const ARROW_TARGETS = (width >= 1000)?({
+    tl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.375, rotate: -135 },
+    tr: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.375, rotate: -45 },
+    br: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.375, rotate: 45 },
+    bl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.375, rotate: 135 },
+  }):({
+          tl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.2, rotate: -135 },
+          tr: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.2, rotate: -45 },
+          br: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.425, rotate: 45 },
+          bl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.425, rotate: 135 },
+        });
 
   return (
-    <div className="app">
-      <motion.div className="background">
-        <div
+    <div className="app" style={{ width: "100%", height: "100vh", overflow: "hidden" }}>
+      <motion.div
+        className="background"
+        style={{ position: "relative", width: "100%", height: "100%" }}
+      >
+        {/* Corner texts */}
+        <motion.div
           className="masked-content"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: reveal ? 0 : 1 }}
+          transition={{ duration: 1 }}
           style={{
             display: "grid",
             gridTemplateRows: "1fr 1fr",
             gridTemplateColumns: "1fr 1fr",
             width: "100%",
             height: "100%",
+            padding: 15,
           }}
         >
-          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", padding: 15 }}>
-            <p>I am not a mortal to die. I am an idea that never fades</p>
+          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
+            <p style={{ fontSize: paraFontSize }}>
+              I am not a mortal to die. I am an idea that never fades
+            </p>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start", padding: 15 }}>
-            <p style={{ textAlign: "right" }}>People always see me but never knew my name</p>
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
+            <p style={{ textAlign: "right", fontSize: paraFontSize }}>
+              People always see me but never knew my name
+            </p>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-end", padding: 15 }}>
-            <p>The ones who knew me still has my aura running inside them</p>
+          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-end" }}>
+            <p style={{ fontSize: paraFontSize }}>
+              The ones who knew me still has my aura running inside them
+            </p>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", padding: 15 }}>
-            <p style={{ textAlign: "right" }}>I am the greatest Hunt you can ever witness</p>
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }}>
+            <p style={{ textAlign: "right", fontSize: paraFontSize }}>
+              I am the greatest Hunt you can ever witness
+            </p>
           </div>
-        </div>
+        </motion.div>
 
-        <div
+        {/* 🔹 Dashed map overlay (only after reveal) */}
+{/* 🔹 Dashed map overlay (only after reveal) */}
+{reveal && (width >= 1000)?(
+  <motion.svg
+    viewBox={`0 0 ${width} ${height}`}
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      zIndex: 1,
+    }}
+  >
+    {/* Top-left curve */}
+    <motion.path
+      d={`M ${width * 0.1},${height * 0.15}
+          C ${width * 0.18},${height * 0.05}
+            ${width * 0.22},${height * 0.25}
+            ${width * 0.25},${height * 0.05}`}
+      stroke="rgba(255,255,255,0.9)"
+      strokeWidth={3}
+      strokeDasharray="12 8"
+      fill="none"
+      initial={{ strokeDashoffset: 200 }}
+      animate={{ strokeDashoffset: 0 }}
+      transition={{ duration: 2, repeat: Infinity }}
+    />
+    <circle cx={width * 0.1} cy={height * 0.15} r={10} fill="#F3ED99" />
+    <circle cx={width * 0.25} cy={height*0.05} r={10} fill="#F3ED99" />
+
+    {/* Top-right curve */}
+    <motion.path
+      d={`M ${width * 0.7},${height * 0.1}
+          C ${width * 0.75},${height * 0.2}
+            ${width * 0.85},${height * 0.25}
+            ${width * 0.9},${height * 0.15}`}
+      stroke="rgba(255,255,255,0.9)"
+      strokeWidth={3}
+      strokeDasharray="12 8"
+      fill="none"
+      initial={{ strokeDashoffset: 200 }}
+      animate={{ strokeDashoffset: 0 }}
+      transition={{ duration: 2.2, repeat: Infinity }}
+    />
+    <circle cx={width * 0.7} cy={height * 0.1} r={10} fill="#F3ED99" />
+    <circle cx={width * 0.9} cy={height * 0.15} r={10} fill="#F3ED99" />
+
+    {/* Bottom-left curve */}
+    <motion.path
+      d={`M ${width * 0.05},${height * 0.6}
+          C ${width * 0.1},${height * 0.55}
+            ${width * 0.2},${height * 0.85}
+            ${width * 0.15},${height * 0.8}`}
+      stroke="rgba(255,255,255,0.9)"
+      strokeWidth={3}
+      strokeDasharray="12 8"
+      fill="none"
+      initial={{ strokeDashoffset: 200 }}
+      animate={{ strokeDashoffset: 0 }}
+      transition={{ duration: 2.4, repeat: Infinity }}
+    />
+    <circle cx={width * 0.05} cy={height * 0.6} r={10} fill="#F3ED99" />
+    <circle cx={width * 0.15} cy={height * 0.8} r={10} fill="#F3ED99" />
+
+    {/* Bottom-right curve */}
+    <motion.path
+      d={`M ${width * 0.75},${height * 0.4}
+          C ${width * 0.8},${height * 0.35}
+            ${width * 0.85},${height * 0.55}
+            ${width * 0.9},${height * 0.5}`}
+      stroke="rgba(255,255,255,0.9)"
+      strokeWidth={3}
+      strokeDasharray="12 8"
+      fill="none"
+      initial={{ strokeDashoffset: 200 }}
+      animate={{ strokeDashoffset: 0 }}
+      transition={{ duration: 2.6, repeat: Infinity }}
+    />
+    <circle cx={width * 0.75} cy={height * 0.4} r={10} fill="#F3ED99" />
+    <circle cx={width * 0.9} cy={height * 0.5} r={10} fill="#F3ED99" />
+  </motion.svg>
+):(
+    <motion.svg
+        viewBox={`0 0 ${width} ${height}`}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 1,
+        }}
+      >
+        {/* Top-left curve */}
+        <motion.path
+          d={`M ${width * 0.05},${height * 0.1}
+              C ${width * 0.12},${height * 0.05}
+                ${width * 0.18},${height * 0.15}
+                ${width * 0.1},${height * 0.025}`}
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth={3}
+          strokeDasharray="12 8"
+          fill="none"
+          initial={{ strokeDashoffset: 200 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        />
+        <circle cx={width * 0.05} cy={height * 0.1} r={10} fill="#F3ED99" />
+        <circle cx={width * 0.1} cy={height*0.025} r={10} fill="#F3ED99" />
+
+        {/* Top-right curve */}
+        <motion.path
+          d={`M ${width * 0.7},${height * 0.25}
+              C ${width * 0.75},${height * 0.2}
+                ${width * 0.85},${height * 0.25}
+                ${width * 0.9},${height * 0.18}`}
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth={3}
+          strokeDasharray="12 8"
+          fill="none"
+          initial={{ strokeDashoffset: 200 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 2.2, repeat: Infinity }}
+        />
+        <circle cx={width * 0.7} cy={height * 0.25} r={10} fill="#F3ED99" />
+        <circle cx={width * 0.9} cy={height * 0.18} r={10} fill="#F3ED99" />
+
+        {/* Bottom-left curve */}
+        <motion.path
+          d={`M ${width * 0.15},${height * 0.5}
+              C ${width * 0},${height * 0.55}
+                ${width * 0.2},${height * 0.9}
+                ${width * 0.75},${height * 0.8}`}
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth={3}
+          strokeDasharray="12 8"
+          fill="none"
+          initial={{ strokeDashoffset: 300 }}   // increase offset since it's longer
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+        <circle cx={width * 0.15} cy={height * 0.5} r={10} fill="#F3ED99" />
+        <circle cx={width * 0.75} cy={height * 0.8} r={10} fill="#F3ED99" />
+
+        {/* Bottom-right curve */}
+        <motion.path
+          d={`M ${width * 0.95},${height * 0.3}
+              C ${width * 0.8},${height * 0.35}
+                ${width * 0.85},${height * 0.55}
+                ${width * 0.9},${height * 0.5}`}
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth={3}
+          strokeDasharray="12 8"
+          fill="none"
+          initial={{ strokeDashoffset: 200 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 2.6, repeat: Infinity }}
+        />
+        <circle cx={width * 0.95} cy={height * 0.3} r={10} fill="#F3ED99" />
+        <circle cx={width * 0.9} cy={height * 0.5} r={10} fill="#F3ED99" />
+      </motion.svg>
+      )
+}
+
+        {/* Titles + Image */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: reveal ? 1 : 0 }}
+          transition={{ duration: 1 }}
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             alignItems: "center",
             width: "100%",
             height: "100%",
@@ -131,11 +287,12 @@ export default function App() {
             top: 0,
             left: 0,
             zIndex: 5,
+            fontFamily: 'Geist'
           }}
         >
-          <h1
+          <motion.h1
             style={{
-              fontSize: "4rem",
+              fontSize: (width >= 1000)?"9vw":"14vw",
               fontWeight: "bold",
               background: "linear-gradient(to right, #1E1E1E, #474747)",
               WebkitBackgroundClip: "text",
@@ -143,56 +300,185 @@ export default function App() {
               textAlign: "center",
               marginBottom: "1rem",
             }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: reveal ? 1 : 0 }}
+            transition={{ duration: 1.2 }}
           >
             cryptic hunt
-          </h1>
-          <h1
+          </motion.h1>
+          <motion.h1
             style={{
-              fontSize: "2rem",
+              fontSize: (width >= 1000)?"3vw":"7vw",
               fontWeight: "bold",
               color: "#F3ED99",
               textAlign: "center",
-              marginBottom: "1rem",
+              marginBottom: "2rem",
             }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: reveal ? 1 : 0 }}
+            transition={{ duration: 1.4 }}
           >
             Expect the Unexpected
-          </h1>
+          </motion.h1>
+          <motion.button
+  whileHover={{ scale: 1.1, boxShadow: "0px 0px 25px rgba(243,237,153,0.9)" }}
+  whileTap={{ scale: 0.95 }}
+  style={{
+    padding: "1rem 2.5rem",
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    border: "none",
+    borderRadius: "50px",
+    cursor: "pointer",
+    background: "linear-gradient(90deg, #F3ED99, #FFD700, #F3ED99)",
+    backgroundSize: "300% 300%",
+    color: "#1E1E1E",
+    textTransform: "uppercase",
+    letterSpacing: "2px",
+    marginTop: "0.25rem",
+    marginBottom: "0.4rem",
+    zIndex: 10,
+    animation: "gradientMove 4s ease infinite",
+  }}
+>
+  Register
+</motion.button>
+          {/* Background map layer */}
+{reveal && (
+  <img
+    src={Map}
+    alt="map"
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      zIndex: 1, // just above gradient, below titles + Pintoo
+    }}
+  />
+)}
 
-          <svg viewBox="0 0 200 200" width={500} height={500}>
-            <circle cx="100" cy="100" r="90" fill="#f4d19b" />
-            <circle cx="70" cy="80" r="20" fill="white" />
-            <circle cx={pupils.left.cx} cy={pupils.left.cy} r="8" fill="black" />
-            <circle cx="130" cy="80" r="20" fill="white" />
-            <circle cx={pupils.right.cx} cy={pupils.right.cy} r="8" fill="black" />
-          </svg>
-        </div>
+{/* Pintoo image stays above */}
+<motion.img
+        src={images[currentIndex]}
+        alt="Changing friend"
+        style={{
+          position: "absolute",
+          bottom: "20%",
+          left: "40%",
+          width: pintooSize * 0.25,
+          height: "auto",
+          zIndex: 1, // 👈 behind Pintoo
+        }}
+        animate={{
+          x: [0, pintooSize * 0.4, pintooSize * 0.4, 0],
+          y: [0, -pintooSize * 0.9, -pintooSize * 0.9, 0],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+<motion.img
+  src={Pintoo}
+  alt="pintoo"
+  initial={{ y: 200, opacity: 0, scale: 0.8 }}
+  animate={{
+    y: reveal ? 0 : 200,
+    opacity: reveal ? 1 : 0,
+    scale: reveal ? 1 : 0.8,
+  }}
+  transition={{ duration: 1.2, ease: "easeOut" }}
+  style={{
+    width: pintooSize,   // ✅ no curly braces inside
+    height: pintooSize,
+    zIndex: 5,
+  }}
+/>
+        </motion.div>
       </motion.div>
 
-      {/* The masked overlay */}
-      <svg className="overlay-svg" viewBox={`0 0 ${width} ${height}`}>
-        <defs>
-          <mask id="mask">
-            <rect x="0" y="0" width={width} height={height} fill="white" />
-            <motion.circle cx="0" cy="0" fill="black" animate={{ r: radii.tl }} />
-            <motion.circle cx={width} cy="0" fill="black" animate={{ r: radii.tr }} />
-            <motion.circle cx={width} cy={height} fill="black" animate={{ r: radii.br }} />
-            <motion.circle cx="0" cy={height} fill="black" animate={{ r: radii.bl }} />
-          </mask>
-        </defs>
-        <rect x="0" y="0" width={width} height={height} fill="black" mask="url(#mask)" />
-      </svg>
-
-      {!allDone && current && (
-        <motion.div
-          className="arrow"
-          initial={{ x: 0, y: 0, rotate: 0 }}
-          animate={ARROW_TARGETS[current]}
-          transition={{ type: "spring", stiffness: 120, damping: 16 }}
-          onClick={() => handleClick(current)}
+      {/* Overlay (black first, reveals content with circles) */}
+      {!reveal && (
+        <motion.svg
+          className="overlay-svg"
+          viewBox={`0 0 ${width} ${height}`}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 20,
+          }}
         >
-          ➤
-        </motion.div>
+          <defs>
+            <mask id="mask">
+              <rect x="0" y="0" width={width} height={height} fill="white" />
+              <motion.circle cx="0" cy="0" fill="black" animate={{ r: radii.tl }} />
+              <motion.circle cx={width} cy="0" fill="black" animate={{ r: radii.tr }} />
+              <motion.circle cx={width} cy={height} fill="black" animate={{ r: radii.br }} />
+              <motion.circle cx="0" cy={height} fill="black" animate={{ r: radii.bl }} />
+            </mask>
+          </defs>
+          <rect x="0" y="0" width={width} height={height} fill="black" mask="url(#mask)" />
+        </motion.svg>
       )}
+
+      {/* Arrow ➤ → Question mark ? */}
+      <AnimatePresence>
+        {!allDone && current && !reveal && (
+          <motion.div
+            key="arrow"
+            className="arrow"
+            initial={{ x: 0, y: 0, rotate: 0 }}
+            animate={ARROW_TARGETS[current]}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 120, damping: 16 }}
+            onClick={() => handleClick(current)}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              fontSize: "3rem",
+              zIndex: 30,
+              cursor: "pointer",
+            }}
+          >
+            ➤
+          </motion.div>
+        )}
+
+        {allDone && !reveal && (
+          <motion.div
+            key="question"
+            className="question"
+            initial={{ scale: 0 }}
+            animate={{ scale: 2, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            style={{
+              position: "absolute",
+              top: height * 0.5 - width * 0.04,
+              left: width * 0.5,
+              transform: "translate(-50%, -50%)",
+              fontSize: width * 0.08,
+              fontWeight: "bold",
+              color: "#F3ED99",
+              cursor: "pointer",
+              zIndex: 30,
+            }}
+            onClick={() => setReveal(true)}
+          >
+            ?
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
