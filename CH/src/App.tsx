@@ -5,6 +5,7 @@ import Pintoo from "../assets/images/Pintoo.svg";
 import AtlanticOwl from "../assets/images/Atlantic Owl-2 1.png";
 import EqyptianOwl from "../assets/images/Egyptian pintoo-2 2.png";
 import PokemonOwl from "../assets/images/Pokemon owl-2 2.png";
+import SpiderOwl from "../assets/images/spidermanpintoonew 1.png"
 import Map from "../assets/images/Map Asset.png";
 import "./App.css";
 
@@ -12,7 +13,7 @@ const ORDER = ["tl", "tr", "br", "bl"];
 
 export default function App() {
       const buttonRef = useRef(null);
-    const images = [AtlanticOwl, EqyptianOwl, PokemonOwl];
+    const images = [AtlanticOwl, EqyptianOwl, PokemonOwl, SpiderOwl];
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   // State to track which image is active
@@ -92,22 +93,22 @@ export default function App() {
         >
           <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
             <p style={{ fontSize: paraFontSize }}>
-              I am not a mortal to die. I am an idea that never fades
+              I do not die. I endure — an idea that outlives time.
             </p>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
             <p style={{ textAlign: "right", fontSize: paraFontSize }}>
-              People always see me but never knew my name
+              You’ve always seen me… but you never knew my name.
             </p>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-end" }}>
             <p style={{ fontSize: paraFontSize }}>
-              The ones who knew me still has my aura running inside them
+              The ones who knew me still carry my aura within them.
             </p>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }}>
             <p style={{ textAlign: "right", fontSize: paraFontSize }}>
-              I am the greatest Hunt you can ever witness
+              I am the greatest hunt you will ever witness.
             </p>
           </div>
         </motion.div>
