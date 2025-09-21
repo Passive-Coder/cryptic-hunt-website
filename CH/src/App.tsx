@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useWindowSize from "./useWindowSize";
 import Pintoo from "../assets/images/Pintoo.svg";
@@ -11,13 +11,19 @@ import "./App.css";
 const ORDER = ["tl", "tr", "br", "bl"];
 
 export default function App() {
+      const buttonRef = useRef(null);
     const images = [AtlanticOwl, EqyptianOwl, PokemonOwl];
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   // State to track which image is active
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Cycle through images every 4 seconds
   useEffect(() => {
+      if (buttonRef.current) {
+                  const rect = buttonRef.current.getBoundingClientRect();
+                  setSize({ width: rect.width, height: rect.height });
+                }
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 3000);
@@ -25,13 +31,13 @@ export default function App() {
   }, []);
 
   const { width, height } = useWindowSize();
-  const pintooSize = (width >=900)?(Math.min(width, height) * 0.55):(Math.min(width, height)*0.8);
+  const pintooSize = (width >=400)?(Math.min(width, height) * 0.55):(Math.min(width, height)*0.8);
   const [step, setStep] = useState(0);
   const [radii, setRadii] = useState({ tl: 0, tr: 0, br: 0, bl: 0 });
   const [reveal, setReveal] = useState(false);
 
-  const paraFontSize = width > height ? height * 0.025 : width * 0.025;
-  const PARTIAL = height > width ? width * 0.32 : height * 0.5;
+  const paraFontSize = (width <= 1000)?((width > height) ? height * 0.025 : width * 0.025)*1.5:((width > height) ? height * 0.025 : width * 0.025);
+  const PARTIAL = (width <= 1000)?(((height > width) ? width * 0.32 : height * 0.5)*1.75):(((height > width) ? width * 0.32 : height * 0.5));
   const FULL = Math.max(width, height);
   const current = ORDER[step];
 
@@ -57,10 +63,10 @@ export default function App() {
     br: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.375, rotate: 45 },
     bl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.375, rotate: 135 },
   }):({
-          tl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.2, rotate: -135 },
-          tr: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.2, rotate: -45 },
-          br: { x: -width / 2 + 3.75 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.425, rotate: 45 },
-          bl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (height / 2) * 0.425, rotate: 135 },
+          tl: { x: -width / 2 + 2 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.4, rotate: -135 },
+          tr: { x: -width / 2 + 3 * (width / 2) * 0.375, y: -height / 2 + (height / 2) * 0.4, rotate: -45 },
+          br: { x: -width / 2 + 3 * (width / 2) * 0.375, y: -height / 2 + 3 * (height / 2) * 0.425, rotate: 45 },
+          bl: { x: -width / 2 + 2 * (width / 2) * 0.375, y: -height / 2 + 3 * (height / 2) * 0.425, rotate: 135 },
         });
 
   return (
@@ -108,7 +114,7 @@ export default function App() {
 
         {/* 🔹 Dashed map overlay (only after reveal) */}
 {/* 🔹 Dashed map overlay (only after reveal) */}
-{reveal && (width >= 1000)?(
+{(reveal)?((width >= 1000)?(
   <motion.svg
     viewBox={`0 0 ${width} ${height}`}
     style={{
@@ -269,6 +275,7 @@ export default function App() {
         <circle cx={width * 0.9} cy={height * 0.5} r={10} fill="#F3ED99" />
       </motion.svg>
       )
+  ):null
 }
 
         {/* Titles + Image */}
@@ -323,9 +330,11 @@ export default function App() {
           <motion.button
   whileHover={{ scale: 1.1, boxShadow: "0px 0px 25px rgba(243,237,153,0.9)" }}
   whileTap={{ scale: 0.95 }}
+ onClick={() => window.location.href = "https://gravitas.vit.ac.in/events/3df08aa2-22c9-42ff-8640-de501218780f"}
+  ref={buttonRef}
   style={{
     padding: "1rem 2.5rem",
-    fontSize: "1.5rem",
+    fontSize: (width > height)?(height*0.05):(width*0.05),
     fontWeight: "bold",
     border: "none",
     borderRadius: "50px",
@@ -337,7 +346,7 @@ export default function App() {
     letterSpacing: "2px",
     marginTop: "0.25rem",
     marginBottom: "0.4rem",
-    zIndex: 10,
+    zIndex: 2,
     animation: "gradientMove 4s ease infinite",
   }}
 >
@@ -366,15 +375,15 @@ export default function App() {
         alt="Changing friend"
         style={{
           position: "absolute",
-          bottom: "20%",
-          left: "40%",
-          width: pintooSize * 0.25,
+          bottom: ((height - pintooSize)<0)?(pintooSize*0.5):((pintooSize*0.5 + height/2 - pintooSize)),
+          left: "45%",
+          width: size.height,
           height: "auto",
-          zIndex: 1, // 👈 behind Pintoo
+           zIndex: 4,   // ✅ always on top
         }}
         animate={{
-          x: [0, pintooSize * 0.4, pintooSize * 0.4, 0],
-          y: [0, -pintooSize * 0.9, -pintooSize * 0.9, 0],
+          x: [0, (size.width*0.6), (size.width*0.6), 0],
+          y: [0, (-pintooSize*0.6), (-pintooSize * 0.6), 0],
         }}
         transition={{
           duration: 3,
@@ -432,6 +441,7 @@ export default function App() {
       {/* Arrow ➤ → Question mark ? */}
       <AnimatePresence>
         {!allDone && current && !reveal && (
+            <>
           <motion.div
             key="arrow"
             className="arrow"
@@ -452,16 +462,60 @@ export default function App() {
           >
             ➤
           </motion.div>
+          <motion.div
+                key="click-hint"
+                initial={{ opacity: 0 }}
+                animate={{
+                  y: [0, -15, 0],      // bounce
+                  opacity: 1,          // visible when active
+                }}
+                exit={{ opacity: 0 }}   // fade out when removed
+                transition={{
+                  y: {
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  },
+                  opacity: {
+                    duration: 0.8, // fade-out speed
+                  },
+                }}
+                style={{
+                  position: "absolute",
+                  bottom: "50%",
+                  left: "27.5%",
+                  transform: "translateX(-50%)",
+                  color: "#F3ED99",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  zIndex: 25,
+                }}
+              >
+                Click on the arrow
+              </motion.div>
+              </>
         )}
 
         {allDone && !reveal && (
           <motion.div
             key="question"
             className="question"
-            initial={{ scale: 0 }}
-            animate={{ scale: 2, opacity: 1 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+              scale: 2,
+              opacity: 1,
+              y: [0, -15, 0],   // 👈 oscillation up & down
+            }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{
+              scale: { duration: 0.8, ease: "easeOut" }, // pop in
+              opacity: { duration: 0.8 },
+              y: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+            }}
             style={{
               position: "absolute",
               top: height * 0.5 - width * 0.04,
