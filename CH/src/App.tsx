@@ -506,11 +506,11 @@ zIndex: 5,
         animate={{
           scale: 2,
           opacity: 1,
-          y: [0, -15, 0],   // 👈 oscillation up & down
+          y: [0, -15, 0], 
         }}
         exit={{ opacity: 0 }}
         transition={{
-          scale: { duration: 0.8, ease: "easeOut" }, // pop in
+          scale: { duration: 0.8, ease: "easeOut" }, 
           opacity: { duration: 0.8 },
           y: {
             duration: 1.5,
