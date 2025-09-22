@@ -71,7 +71,7 @@ bl: { x: -width / 2 + 1.25 * (width / 2) * 0.375, y: -height / 2 + 3.75 * (heigh
     });
 
 return (
-<div className="app" style={{ width: "100%", height: "100vh", overflow: "hidden" }}>
+<div className="app" style={{ width: "100%", height: "100dvh", overflow: "hidden" }}>
   <motion.div
     className="background"
     style={{ position: "relative", width: "100%", height: "100%" }}
@@ -519,7 +519,7 @@ zIndex: 5,
         }}
         style={{
           position: "absolute",
-          top: height * 0.5 - width * 0.04,
+          top: height * 0.5 - width * 0.05,
           left: width * 0.48,
           transform: "translate(-50%, -50%)",
           fontSize: width * 0.08,
