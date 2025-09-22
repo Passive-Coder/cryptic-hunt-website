@@ -92,22 +92,22 @@ return (
       }}
     >
       <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
-        <p style={{ fontSize: paraFontSize }}>
+        <p style={{ fontSize: paraFontSize, color: 'white' }}>
           I do not die. I endure — an idea that outlives time.
         </p>
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
-        <p style={{ textAlign: "right", fontSize: paraFontSize }}>
+        <p style={{ textAlign: "right", fontSize: paraFontSize, color: 'white' }}>
           You’ve always seen me… but you never knew my name.
         </p>
       </div>
       <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-end" }}>
-        <p style={{ fontSize: paraFontSize }}>
+        <p style={{ fontSize: paraFontSize, color: 'white' }}>
           The ones who knew me still carry my aura within them.
         </p>
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }}>
-        <p style={{ textAlign: "right", fontSize: paraFontSize }}>
+        <p style={{ textAlign: "right", fontSize: paraFontSize, color: 'white' }}>
           I am the greatest hunt you will ever witness.
         </p>
       </div>
@@ -455,6 +455,7 @@ zIndex: 5,
           position: "absolute",
           top: "50%",
           left: "50%",
+          color: 'white',
           transform: "translate(-50%, -50%)",
           fontSize: "3rem",
           zIndex: 30,
